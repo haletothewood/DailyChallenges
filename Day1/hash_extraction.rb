@@ -67,33 +67,31 @@ require 'date'
           Date.parse("1995-06-23")]]}
         }
 
-  def date_to_string(date_arr)
-      date_arr = date_arr.to_s.split("-")
-      months = [
-        "January", "February",
-        "March", "April", "May",
-        "June", "July", "August",
-        "September", "October",
-        "November", "December"
-      ]
+def date_to_string(date_arr)
+    date_arr = date_arr.to_s.split("-")
+    months = [
+      "January", "February",
+      "March", "April", "May",
+      "June", "July", "August",
+      "September", "October",
+      "November", "December"
+    ]
 
-      @date = date_arr[2].to_s
+    @date = date_arr[2].to_s
       case date_arr[2][1]
-      when '1'
-        @date << "st of "
-      when '2'
-        @date << "nd of "
-      when '3'
-        @date << "rd of "
-      else
-        @date << "th of "
+        when '1'
+          @date << "st of "
+        when '2'
+          @date << "nd of "
+        when '3'
+          @date << "rd of "
+        else
+          @date << "th of "
       end
 
-      @date = @date[1..-1] if date_arr[2][0] == "0"
-
-      @date << months[@date[1].to_i + 1] + ', ' + date_arr[0] + '.'
-
-  end
+    @date = @date[1..-1] if date_arr[2][0] == "0"
+    @date << months[@date[1].to_i + 1] + ', ' + date_arr[0] + '.'
+end
 
 def prompt
   puts "What location would you like to search in? (Or press enter for full list)"
