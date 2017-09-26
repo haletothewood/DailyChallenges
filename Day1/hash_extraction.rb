@@ -1,9 +1,8 @@
 require 'date'
 # A hash of all house prices and transactions
 # Data from the Land Registry and transformed through Postcodes.io
-def print_houses
 
-    houses = {
+    @houses = {
       ["Basingstoke and Deane", "Tadley South"]=>
       {:count=>1,
        :average=>94000,
@@ -68,47 +67,55 @@ def print_houses
           Date.parse("1995-06-23")]]}
         }
 
+  def date_to_string(date_arr)
+      date_arr = date_arr.to_s.split("-")
+      months = [
+        "January", "February",
+        "March", "April", "May",
+        "June", "July", "August",
+        "September", "October",
+        "November", "December"
+      ]
+
+      @date = date_arr[2].to_s
+      case date_arr[2][1]
+      when '1'
+        @date << "st of "
+      when '2'
+        @date << "nd of "
+      when '3'
+        @date << "rd of "
+      else
+        @date << "th of "
+      end
+
+      @date = @date[1..-1] if date_arr[2][0] == "0"
+
+      @date << months[@date[1].to_i + 1] + ', ' + date_arr[0] + '.'
+
+  end
+
+def prompt
   puts "What location would you like to search in? (Or press enter for full list)"
-  place = gets.chomp.capitalize
-  houses.each do |location, data|
-    if !place.nil?
-      if !location[0].include?(place) && !location[1].include?(place)
+  @place = gets.chomp.capitalize
+end
+
+def print_houses
+  prompt
+  @houses.each do |location, data|
+    if !@place.nil?
+      if !location[0].include?(@place) && !location[1].include?(@place)
         next
       end
     end
 
-    date_arr = data[:transactions][0][2].to_s.split("-")
-
-    months = [
-      "January", "February",
-      "March", "April", "May",
-      "June", "July", "August",
-      "September", "October",
-      "November", "December"
-    ]
-
-    date = date_arr[2].to_s
-    case date_arr[2][1]
-    when '1'
-      date << "st of "
-    when '2'
-      date << "nd of "
-    when '3'
-      date << "rd of "
-    else
-      date << "th of "
-    end
-
-    date = date[1..-1] if date_arr[2][0] == "0"
-
-    date << months[date[1].to_i + 1] + ', ' + date_arr[0] + '.'
-
+    date_to_string(data[:transactions][0][2])
     price = data[:average].to_s
     if price.length > 3
       price = price.chars.reverse.each_slice(3).map(&:join).join(",").reverse
     end
 
-    puts "A house was sold in #{location[0]}, #{location[1]} for £#{price} on the #{date}"
+    puts "A house was sold in #{location[0]}, #{location[1]} for £#{price} on the #{@date}"
   end
 end
 
